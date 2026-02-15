@@ -139,7 +139,7 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 			builder.HasIndex(e => new { e.PlayerId, e.ActionTypeId });
 			builder.HasIndex(e => new { e.VictimPlayerId, e.ActionTypeId });
 			builder.HasIndex(e => new { e.KillerPlayerId, e.ActionTypeId });
-			builder.HasIndex(e => new { e.ItemId, e.ActionTypeId });
+			builder.HasIndex(e => new { e.ActionTypeId, e.ItemId });
 		}
 	}
 }
