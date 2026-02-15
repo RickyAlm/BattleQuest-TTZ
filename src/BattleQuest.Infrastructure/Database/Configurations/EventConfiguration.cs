@@ -11,6 +11,7 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 			builder.ToTable("Event");
 			builder.HasKey(e => e.EventId);
 
+			// Strings
 			builder.Property(e => e.PlayerId).HasColumnType("varchar(20)");
 			builder.Property(e => e.VictimPlayerId).HasColumnType("varchar(20)");
 			builder.Property(e => e.KillerPlayerId).HasColumnType("varchar(20)");
@@ -24,6 +25,7 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 				.IsRequired()
 				.HasColumnType("varchar(64)");
 
+			// Relationships
 			builder.HasOne(e => e.Channel)
 				.WithMany(c => c.Events)
 				.HasForeignKey(e => e.ChannelId)
@@ -54,6 +56,7 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 				.HasForeignKey(e => e.QuestId)
 				.OnDelete(DeleteBehavior.Restrict);
 
+			// Player relationships
 			builder.HasOne(e => e.Player)
 				.WithMany()
 				.HasForeignKey(e => e.PlayerId)
@@ -69,6 +72,7 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 				.HasForeignKey(e => e.KillerPlayerId)
 				.OnDelete(DeleteBehavior.Restrict);
 
+			// Indexes
 			builder.HasIndex(e => e.PlayerId);
 			builder.HasIndex(e => e.VictimPlayerId);
 			builder.HasIndex(e => e.KillerPlayerId);
