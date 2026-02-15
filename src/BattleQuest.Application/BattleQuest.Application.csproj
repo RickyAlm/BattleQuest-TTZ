@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BattleQuest.Domain\BattleQuest.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
