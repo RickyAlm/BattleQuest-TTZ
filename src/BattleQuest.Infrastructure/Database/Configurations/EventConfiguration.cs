@@ -8,21 +8,82 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Event> builder)
 		{
-			builder.ToTable("Event");
+			builder.ToTable("events");
+
+			// Keys
 			builder.HasKey(e => e.EventId);
 
-			// Strings
-			builder.Property(e => e.PlayerId).HasColumnType("varchar(20)");
-			builder.Property(e => e.VictimPlayerId).HasColumnType("varchar(20)");
-			builder.Property(e => e.KillerPlayerId).HasColumnType("varchar(20)");
-			builder.Property(e => e.QuestId).HasColumnType("varchar(20)");
+			builder.Property(e => e.EventId)
+				.HasColumnName("event_id")
+				.ValueGeneratedOnAdd();
+
+			// FKs
+			builder.Property(e => e.ChannelId).HasColumnName("channel_id");
+			builder.Property(e => e.ActionTypeId).HasColumnName("action_type_id");
+
+			builder.Property(e => e.PlayerId)
+				.HasColumnName("player_id")
+				.HasColumnType("varchar(20)");
+
+			builder.Property(e => e.VictimPlayerId)
+				.HasColumnName("victim_player_id")
+				.HasColumnType("varchar(20)");
+
+			builder.Property(e => e.KillerPlayerId)
+				.HasColumnName("killer_player_id")
+				.HasColumnType("varchar(20)");
+
+			builder.Property(e => e.QuestId)
+				.HasColumnName("quest_id")
+				.HasColumnType("varchar(20)");
+
+			builder.Property(e => e.ZoneId).HasColumnName("zone_id");
+			builder.Property(e => e.ItemId).HasColumnName("item_id");
+			builder.Property(e => e.BossId).HasColumnName("boss_id");
+
+			// Properties
+			builder.Property(e => e.OccurredAt)
+				.IsRequired()
+				.HasColumnName("occurred_at")
+				.HasColumnType("timestamptz");
+
+			builder.Property(e => e.Quantity).HasColumnName("quantity");
+			builder.Property(e => e.Xp).HasColumnName("xp");
+			builder.Property(e => e.Gold).HasColumnName("gold");
+			builder.Property(e => e.Hp).HasColumnName("hp");
+			builder.Property(e => e.Damage).HasColumnName("damage");
+			
+			builder.Property(e => e.Method)
+				.HasColumnName("method")
+				.HasColumnType("varchar(100)");
+
+			builder.Property(e => e.PlayerLevel).HasColumnName("player_level");
+			builder.Property(e => e.Points).HasColumnName("points");
+
+			builder.Property(e => e.Reason)
+				.HasColumnName("reason")
+				.HasColumnType("varchar(255)");
+
+			builder.Property(e => e.LocationX).HasColumnName("location_x");
+			builder.Property(e => e.LocationY).HasColumnName("location_y");
+
+			builder.Property(e => e.MessageText)
+				.HasColumnName("message_text")
+				.HasColumnType("varchar(500)");
+
+			builder.Property(e => e.InsertedAt)
+				.IsRequired()
+				.HasColumnName("inserted_at")
+				.HasColumnType("timestamptz");
 
 			builder.Property(e => e.Raw)
 				.IsRequired()
-				.HasColumnType("varchar(max)");
+				.HasColumnName("raw")
+				.HasColumnType("text");
 
 			builder.Property(e => e.EventHash)
 				.IsRequired()
+				.HasColumnName("event_hash")
 				.HasColumnType("varchar(64)");
 
 			// Relationships

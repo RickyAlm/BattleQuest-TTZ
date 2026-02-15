@@ -8,14 +8,22 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 	{
 		public void Configure(EntityTypeBuilder<Boss> builder)
 		{
-			builder.ToTable("Boss");
+			builder.ToTable("bosses");
 
+			// Keys
 			builder.HasKey(b => b.BossId);
 
+			builder.Property(b => b.BossId)
+				.HasColumnName("boss_id")
+				.ValueGeneratedOnAdd();
+
+			// Properties
 			builder.Property(b => b.Name)
+				.HasColumnName("name")
 				.IsRequired()
 				.HasColumnType("varchar(100)");
 
+			// Indexes
 			builder.HasIndex(b => b.Name)
 				.IsUnique();
 		}
