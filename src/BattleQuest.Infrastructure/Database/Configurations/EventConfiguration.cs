@@ -69,7 +69,7 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 
 			builder.Property(e => e.MessageText)
 				.HasColumnName("message_text")
-				.HasColumnType("varchar(500)");
+				.HasColumnType("text");
 
 			builder.Property(e => e.InsertedAt)
 				.IsRequired()
@@ -134,14 +134,12 @@ namespace BattleQuest.Infrastructure.Database.Configurations
 				.OnDelete(DeleteBehavior.Restrict);
 
 			// Indexes
-			builder.HasIndex(e => e.PlayerId);
-			builder.HasIndex(e => e.VictimPlayerId);
-			builder.HasIndex(e => e.KillerPlayerId);
-			builder.HasIndex(e => e.ChannelId);
-			builder.HasIndex(e => e.ActionTypeId);
 			builder.HasIndex(e => e.OccurredAt);
-			builder.HasIndex(e => e.ZoneId);
 			builder.HasIndex(e => e.EventHash).IsUnique();
+			builder.HasIndex(e => new { e.PlayerId, e.ActionTypeId });
+			builder.HasIndex(e => new { e.VictimPlayerId, e.ActionTypeId });
+			builder.HasIndex(e => new { e.KillerPlayerId, e.ActionTypeId });
+			builder.HasIndex(e => new { e.ItemId, e.ActionTypeId });
 		}
 	}
 }
