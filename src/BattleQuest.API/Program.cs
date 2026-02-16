@@ -6,6 +6,8 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using BattleQuest.Application.Queries.Events;
 using BattleQuest.Infrastructure.Queries.Events;
+using BattleQuest.Application.Queries.Players;
+using BattleQuest.Infrastructure.Queries.Players;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,6 +91,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddScoped<IEventQueries, EfEventQueries>();
+builder.Services.AddScoped<IPlayerQueries, EfPlayerQueries>();
 
 var app = builder.Build();
 
