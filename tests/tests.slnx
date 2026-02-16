@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BattleQuest.Application.Tests/BattleQuest.Application.Tests.csproj" />
+  <Project Path="BattleQuest.Integration.Tests/BattleQuest.Integration.Tests.csproj" />
+</Solution>
