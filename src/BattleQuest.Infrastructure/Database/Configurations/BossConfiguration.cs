@@ -2,30 +2,29 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BattleQuest.Infrastructure.Database.Configurations
+namespace BattleQuest.Infrastructure.Database.Configurations;
+
+public class BossConfiguration : IEntityTypeConfiguration<Boss>
 {
-	public class BossConfiguration : IEntityTypeConfiguration<Boss>
+	public void Configure(EntityTypeBuilder<Boss> builder)
 	{
-		public void Configure(EntityTypeBuilder<Boss> builder)
-		{
-			builder.ToTable("bosses");
+		builder.ToTable("bosses");
 
-			// Keys
-			builder.HasKey(b => b.BossId);
+		// Keys
+		builder.HasKey(b => b.BossId);
 
-			builder.Property(b => b.BossId)
-				.HasColumnName("boss_id")
-				.ValueGeneratedOnAdd();
+		builder.Property(b => b.BossId)
+			.HasColumnName("boss_id")
+			.ValueGeneratedOnAdd();
 
-			// Properties
-			builder.Property(b => b.Name)
-				.HasColumnName("name")
-				.IsRequired()
-				.HasColumnType("varchar(100)");
+		// Properties
+		builder.Property(b => b.Name)
+			.HasColumnName("name")
+			.IsRequired()
+			.HasColumnType("varchar(100)");
 
-			// Indexes
-			builder.HasIndex(b => b.Name)
-				.IsUnique();
-		}
+		// Indexes
+		builder.HasIndex(b => b.Name)
+			.IsUnique();
 	}
 }

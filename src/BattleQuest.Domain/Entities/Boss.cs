@@ -1,11 +1,9 @@
-﻿namespace BattleQuest.Domain.Entities
-{
-    public class Boss
-    {
-        public int BossId { get; set; }
-        public required string Name { get; set; }
+﻿namespace BattleQuest.Domain.Entities;
 
-		public ICollection<Event> Events { get; set; } = new List<Event>();
-	}
+public class Boss
+{
+	public int BossId { get; set; }
+	public required string Name { get; set; }
+
+	public ICollection<Event> Events { get; set; } = new List<Event>();
 }
- 

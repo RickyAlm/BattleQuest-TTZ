@@ -2,31 +2,30 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BattleQuest.Infrastructure.Database.Configurations
+namespace BattleQuest.Infrastructure.Database.Configurations;
+
+public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
 {
-	public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
+	public void Configure(EntityTypeBuilder<Zone> builder)
 	{
-		public void Configure(EntityTypeBuilder<Zone> builder)
-		{
-			builder.ToTable("zones");
+		builder.ToTable("zones");
 
-			// Keys
-			builder.HasKey(z => z.ZoneId);
+		// Keys
+		builder.HasKey(z => z.ZoneId);
 
-			builder.Property(z => z.ZoneId)
-				.IsRequired()
-				.HasColumnName("zone_id")
-				.ValueGeneratedOnAdd();
+		builder.Property(z => z.ZoneId)
+			.IsRequired()
+			.HasColumnName("zone_id")
+			.ValueGeneratedOnAdd();
 
-			// Properties
-			builder.Property(z => z.Name)
-				.IsRequired()
-				.HasColumnName("name")
-				.HasColumnType("varchar(100)");
+		// Properties
+		builder.Property(z => z.Name)
+			.IsRequired()
+			.HasColumnName("name")
+			.HasColumnType("varchar(100)");
 
-			// Indexes
-			builder.HasIndex(z => z.Name)
-				.IsUnique();
-		}
+		// Indexes
+		builder.HasIndex(z => z.Name)
+			.IsUnique();
 	}
 }
