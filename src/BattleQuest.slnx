@@ -2,5 +2,6 @@
   <Project Path="BattleQuest.API/BattleQuest.API.csproj" Id="5b94e174-14e8-4c7b-8087-2f415c018924" />
   <Project Path="BattleQuest.Application/BattleQuest.Application.csproj" Id="691dcb70-1332-4b06-8a94-f022af939247" />
   <Project Path="BattleQuest.Domain/BattleQuest.Domain.csproj" Id="877064e9-09cf-4756-9e54-719278bf4e6f" />
+  <Project Path="BattleQuest.Importer/BattleQuest.Importer.csproj" Id="e8a1a01d-03af-49e0-ada7-fd0e12d46484" />
   <Project Path="BattleQuest.Infrastructure/BattleQuest.Infrastructure.csproj" Id="8f4a464f-9183-4b56-abbb-4e241e41c452" />
 </Solution>
