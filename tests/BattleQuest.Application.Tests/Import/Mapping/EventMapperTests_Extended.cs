@@ -170,20 +170,40 @@ public class EventMapperTests_Extended
 	}
 
 	/// <summary>
-	/// Valida que mensagem pode vir de "message" (CHAT) ou "text" (SYSTEM).
+	/// Valida que mensagem de chat usa campo "message" (CHAT MESSAGE).
 	/// </summary>
-	[Theory]
-	[InlineData("message=\"Hello\"", "Hello")]
-	[InlineData("text=\"System alert\"", "System alert")]
-	public void Map_EventWithMessage_ShouldMapFromMessageOrText(string field, string expectedText)
+	[Fact]
+	public void Map_ChatMessage_ShouldMapFromMessageField()
 	{
-		var line = $"2025-08-04 14:01:14 [CHAT] MESSAGE player_id=p1 {field}";
+		var line = @"2025-08-04 14:01:14 [CHAT] MESSAGE player_id=p1 message=""Hello""";
 		GameLogLineParser.TryParse(line, out var parsed).Should().BeTrue();
 
-		var now = DateTimeOffset.UtcNow;
+		var now = new DateTimeOffset(2026, 02, 16, 12, 0, 0, TimeSpan.Zero);
 		var mapped = EventMapper.Map(parsed, now);
 
-		mapped.Event.MessageText.Should().Be(expectedText);
+		mapped.ChannelName.Should().Be("CHAT");
+		mapped.ActionTypeName.Should().Be("MESSAGE");
+
+		mapped.Event.PlayerId.Should().Be("p1");
+		mapped.Event.MessageText.Should().Be("Hello");
+	}
+
+	/// <summary>
+	/// Valida que anúncio do sistema usa campo "text" (SYSTEM SERVER_ANNOUNCEMENT).
+	/// </summary>
+	[Fact]
+	public void Map_SystemAnnouncement_ShouldMapFromTextField()
+	{
+		var line = @"2025-08-04 14:02:14 [SYSTEM] SERVER_ANNOUNCEMENT text=""System alert""";
+		GameLogLineParser.TryParse(line, out var parsed).Should().BeTrue();
+
+		var now = new DateTimeOffset(2026, 02, 16, 12, 0, 0, TimeSpan.Zero);
+		var mapped = EventMapper.Map(parsed, now);
+
+		mapped.ChannelName.Should().Be("SYSTEM");
+		mapped.ActionTypeName.Should().Be("SERVER_ANNOUNCEMENT");
+
+		mapped.Event.MessageText.Should().Be("System alert");
 	}
 
 	/// <summary>
