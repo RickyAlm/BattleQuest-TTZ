@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="BattleQuest.API.Tests/BattleQuest.API.Tests.csproj" />
   <Project Path="BattleQuest.Application.Tests/BattleQuest.Application.Tests.csproj" />
   <Project Path="BattleQuest.Integration.Tests/BattleQuest.Integration.Tests.csproj" />
 </Solution>

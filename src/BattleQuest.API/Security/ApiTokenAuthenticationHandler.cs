@@ -2,7 +2,9 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace BattleQuest.API.Security;
@@ -64,12 +66,44 @@ public sealed class ApiTokenAuthenticationHandler(
 
 	/// <summary>
 	/// Adiciona o header WWW-Authenticate na resposta 401 Unauthorized.
-	/// Implementa conformidade com RFC 7235.
+	/// Retorna ProblemDetails JSON estruturado com mensagem descritiva do erro.
+	/// Implementa conformidade com RFC 7235 e RFC 7807.
 	/// </summary>
-	protected override Task HandleChallengeAsync(AuthenticationProperties properties)
+	protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
 	{
 		Response.Headers.Append("WWW-Authenticate", $"{ApiTokenDefaults.Scheme} realm=\"BattleQuest API\"");
 		Response.StatusCode = 401;
-		return Task.CompletedTask;
+		Response.ContentType = "application/problem+json";
+
+		// Determina mensagem específica com base no contexto de falha
+		var failureMessage = "Token de autenticação ausente ou inválido.";
+		var headerName = string.IsNullOrWhiteSpace(Options.HeaderName) ? "X-API-TOKEN" : Options.HeaderName;
+
+		if (Context.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult?.Failure?.Message is { } message)
+		{
+			if (message.Contains("ausente", StringComparison.OrdinalIgnoreCase))
+				failureMessage = $"Token de autenticação ausente. Forneça um token válido no header '{headerName}'.";
+			else if (message.Contains("vazio", StringComparison.OrdinalIgnoreCase))
+				failureMessage = $"Token de autenticação vazio. Forneça um token válido no header '{headerName}'.";
+			else if (message.Contains("inválido", StringComparison.OrdinalIgnoreCase))
+				failureMessage = $"Token de autenticação inválido. Verifique se o token fornecido no header '{headerName}' está correto.";
+		}
+
+		var problemDetails = new ProblemDetails
+		{
+			Type = "https://httpstatuses.com/401",
+			Title = "Unauthorized",
+			Status = 401,
+			Detail = failureMessage,
+			Instance = Request.Path
+		};
+
+		var options = new JsonSerializerOptions
+		{
+			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+			WriteIndented = true
+		};
+
+		await Response.WriteAsync(JsonSerializer.Serialize(problemDetails, options));
 	}
 }
