@@ -61,26 +61,26 @@ public class DatabaseFixture : IAsyncLifetime
 		return new BattleQuestDbContext(options);
 	}
 
-	/// <summary>
-	/// Limpa todos os dados de todas as tabelas, mantendo a estrutura.
-	/// Útil para isolar testes.
-	/// </summary>
-	public async Task CleanDatabaseAsync()
-	{
-		await using var context = CreateDbContext();
+    /// <summary>
+    /// Limpa todos os dados de todas as tabelas, mantendo a estrutura.
+    /// </summary>
+    public async Task CleanDatabaseAsync()
+    {
+        await using var context = CreateDbContext();
 
-		// Remove dados em ordem reversa para respeitar foreign keys
-		context.Events.RemoveRange(context.Events);
-		context.Players.RemoveRange(context.Players);
-		context.Quests.RemoveRange(context.Quests);
-		context.Items.RemoveRange(context.Items);
-		context.Bosses.RemoveRange(context.Bosses);
-		context.Zones.RemoveRange(context.Zones);
-		context.ActionTypes.RemoveRange(context.ActionTypes);
-		context.Channels.RemoveRange(context.Channels);
-
-		await context.SaveChangesAsync();
-	}
+        await context.Database.ExecuteSqlRawAsync(@"
+        TRUNCATE TABLE
+            events,
+            players,
+            quests,
+            items,
+            bosses,
+            zones,
+            action_types,
+            channels
+        RESTART IDENTITY CASCADE;
+    ");
+    }
 }
 
 /// <summary>
