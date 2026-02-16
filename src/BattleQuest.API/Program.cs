@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using BattleQuest.Application.Queries.Events;
+using BattleQuest.Infrastructure.Queries.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -84,6 +87,8 @@ builder.Services.AddAuthorization(options =>
 		.RequireAuthenticatedUser()
 		.Build();
 });
+
+builder.Services.AddScoped<IEventQueries, EfEventQueries>();
 
 var app = builder.Build();
 
