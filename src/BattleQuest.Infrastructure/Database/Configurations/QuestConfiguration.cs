@@ -2,26 +2,25 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BattleQuest.Infrastructure.Database.Configurations
+namespace BattleQuest.Infrastructure.Database.Configurations;
+
+public class QuestConfiguration : IEntityTypeConfiguration<Quest>
 {
-	public class QuestConfiguration : IEntityTypeConfiguration<Quest>
+	public void Configure(EntityTypeBuilder<Quest> builder)
 	{
-		public void Configure(EntityTypeBuilder<Quest> builder)
-		{
-			builder.ToTable("quests");
+		builder.ToTable("quests");
 
-			// Keys
-			builder.HasKey(q => q.QuestId);
+		// Keys
+		builder.HasKey(q => q.QuestId);
 
-			builder.Property(q => q.QuestId)
-				.IsRequired()
-				.HasColumnName("quest_id")
-				.HasColumnType("varchar(20)");
+		builder.Property(q => q.QuestId)
+			.IsRequired()
+			.HasColumnName("quest_id")
+			.HasColumnType("varchar(20)");
 
-			// Properties
-			builder.Property(q => q.Name)
-				.HasColumnName("name")
-				.HasColumnType("varchar(100)");
-		}
+		// Properties
+		builder.Property(q => q.Name)
+			.HasColumnName("name")
+			.HasColumnType("varchar(100)");
 	}
 }

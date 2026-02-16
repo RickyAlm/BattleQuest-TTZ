@@ -1,11 +1,10 @@
-﻿namespace BattleQuest.Domain.Entities
-{
-    public class Zone
-    {
-        public int ZoneId { get; set; }
-        public required string Name { get; set; }
+﻿namespace BattleQuest.Domain.Entities;
 
-		public ICollection<Player> LastKnownPlayers { get; set; } = new List<Player>();
-		public ICollection<Event> Events { get; set; } = new List<Event>();
-	}
+public class Zone
+{
+	public int ZoneId { get; set; }
+	public required string Name { get; set; }
+
+	public ICollection<Player> LastKnownPlayers { get; set; } = new List<Player>();
+	public ICollection<Event> Events { get; set; } = new List<Event>();
 }
