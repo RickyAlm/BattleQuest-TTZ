@@ -53,6 +53,7 @@ public static class GameLogLineParser
 
 	/// <summary>
 	/// Extrai e valida o timestamp do início da linha de log.
+	/// Suporta formatos com e sem milissegundos (19 ou 23 caracteres).
 	/// </summary>
 	private static bool TryExtractTimestamp(string line, ref int position, out DateTimeOffset occurredAt)
 	{
@@ -61,11 +62,19 @@ public static class GameLogLineParser
 		if (line.Length < TimestampLength)
 			return false;
 
-		var timestampText = line[..TimestampLength];
+		// Detecta se há milissegundos verificando se na posição 19 há um ponto
+		var timestampLength = (line.Length > TimestampLength && line[TimestampLength] == '.') 
+			? 23 
+			: TimestampLength;
+
+		if (line.Length < timestampLength)
+			return false;
+
+		var timestampText = line[..timestampLength];
 		if (!TryParseTimestamp(timestampText, out occurredAt))
 			return false;
 
-		position = TimestampLength;
+		position = timestampLength;
 		SkipSpaces(line, ref position);
 
 		return true;
