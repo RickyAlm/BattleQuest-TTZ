@@ -25,6 +25,9 @@ public sealed class EfLeaderboardQueries : ILeaderboardQueries
 	/// Agrega pontos de eventos, faz join com Players para dados adicionais,
 	/// ordena descendente e atribui rank sequencial.
 	/// </summary>
+	/// <param name="limit">Número de jogadores a retornar (normalizado entre 1 e 500).</param>
+	/// <param name="ct">Token de cancelamento.</param>
+	/// <returns>Lista de entradas do leaderboard com rank, nome e pontuação.</returns>
 	public async Task<IReadOnlyList<LeaderboardEntryDto>> GetTopPlayersAsync(int limit = DefaultLimit, CancellationToken ct = default)
 	{
 		var normalizedLimit = NormalizeLimit(limit);
