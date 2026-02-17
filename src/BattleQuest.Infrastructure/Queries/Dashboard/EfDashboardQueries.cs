@@ -282,11 +282,11 @@ public sealed class EfDashboardQueries : IDashboardQueries
 	/// <summary>
 	/// Carrega nomes de jogadores do banco para enriquecimento.
 	/// </summary>
-	private Task<Dictionary<string, string>> LoadPlayerNamesAsync(IEnumerable<string> playerIds, CancellationToken ct)
+	private Task<Dictionary<string, string?>> LoadPlayerNamesAsync(IEnumerable<string> playerIds, CancellationToken ct)
 	{
 		var ids = playerIds.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToList();
 		if (ids.Count == 0)
-			return Task.FromResult(new Dictionary<string, string>());
+			return Task.FromResult(new Dictionary<string, string?>());
 
 		return _context.Players
 			.AsNoTracking()
