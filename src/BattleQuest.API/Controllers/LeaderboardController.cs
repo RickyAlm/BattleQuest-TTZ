@@ -12,6 +12,8 @@ namespace BattleQuest.API.Controllers;
 [ApiController]
 [Route("api/leaderboard")]
 [Authorize]
+[Produces("application/json")]
+[Tags("Leaderboard")]
 public sealed class LeaderboardController : ControllerBase
 {
 	private readonly ILeaderboardQueries _queries;
@@ -26,9 +28,11 @@ public sealed class LeaderboardController : ControllerBase
 	/// <param name="ct">Token de cancelamento.</param>
 	/// <returns>Lista de jogadores ordenados por pontuação total (decrescente).</returns>
 	/// <response code="200">Leaderboard retornado com sucesso.</response>
+	/// <response code="400">Parâmetro 'limit' inválido (deve estar entre 1 e 500).</response>
 	/// <response code="401">Token de autenticação ausente ou inválido.</response>
 	[HttpGet]
 	[ProducesResponseType(typeof(IReadOnlyList<LeaderboardEntryDto>), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	public async Task<ActionResult<IReadOnlyList<LeaderboardEntryDto>>> GetTopPlayers(
 		[FromQuery] [Range(1, 500)] int limit = 50,

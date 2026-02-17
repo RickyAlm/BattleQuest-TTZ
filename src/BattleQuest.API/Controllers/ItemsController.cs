@@ -12,6 +12,8 @@ namespace BattleQuest.API.Controllers;
 [ApiController]
 [Route("api/items")]
 [Authorize]
+[Produces("application/json")]
+[Tags("Items")]
 public sealed class ItemsController : ControllerBase
 {
 	private readonly IItemQueries _queries;
@@ -26,9 +28,11 @@ public sealed class ItemsController : ControllerBase
 	/// <param name="ct">Token de cancelamento.</param>
 	/// <returns>Lista de itens ordenados por quantidade total coletada (decrescente).</returns>
 	/// <response code="200">Itens retornados com sucesso.</response>
+	/// <response code="400">Parâmetro 'limit' inválido (deve estar entre 1 e 500).</response>
 	/// <response code="401">Token de autenticação ausente ou inválido.</response>
 	[HttpGet("top")]
 	[ProducesResponseType(typeof(IReadOnlyList<ItemStatsDto>), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	public async Task<ActionResult<IReadOnlyList<ItemStatsDto>>> GetTopCollected(
 		[FromQuery] [Range(1, 500)] int limit = 50,
