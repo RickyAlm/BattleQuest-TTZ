@@ -1,0 +1,261 @@
+{
+  "info": {
+    "_postman_id": "63e2fbe3-3c86-448f-9f35-cdcfe10ec3b3",
+    "name": "BattleQuest API v1",
+    "description": "# BattleQuest API v1\n\nColeção de endpoints **read-only** para consulta de dados processados a partir dos logs do jogo BattleQuest.\n\n---\n\n## Base URL\n\nConfigure a variável `baseUrl` com a URL base do servidor **com barra no final**.\n\n**Exemplo:**\n\n- `baseUrl = http://localhost:7258/`\n    \n- `baseUrl = https://localhost:7258/`\n    \n\nOs endpoints desta coleção usam o prefixo `api/`.\n\n---\n\n## Autenticação (API Token)\n\nA API usa autenticação por token via header (API Key).\n\n### Header obrigatório\n\n- `{{apiKeyHeader}}: {{token}}`\n    \n\n**Valores sugeridos:**\n\n- `apiKeyHeader = X-API-TOKEN`\n    \n- `token = NANDATE-dev-token`\n    \n\n> Observação: endpoints com `[Authorize]` retornam **401** caso o token esteja ausente ou inválido. \n  \n\n---\n\n## Padrões de Resposta e Erros\n\n### Sucesso\n\n- `200 OK` retorna dados em JSON.\n    \n\n### Erros comuns\n\n- `400 Bad Request`: parâmetros inválidos (ex.: limit fora do intervalo).\n    \n- `401 Unauthorized`: token ausente/ inválido.\n    \n\nA API pode retornar `application/problem+json` em erros, no formato **ProblemDetails (RFC 7807)**.\n\n---\n\n## Variáveis da Collection\n\n- `baseUrl`: URL base do servidor (com `/` no final).\n    \n- `apiKeyHeader`: nome do header do token (padrão `X-API-TOKEN`).\n    \n- `token`: valor do token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38285776",
+    "_collection_link": "https://go.postman.co/collection/38285776-63e2fbe3-3c86-448f-9f35-cdcfe10ec3b3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Get dashboard metrics",
+          "protocolProfileBehavior": {
+            "followAuthorizationHeader": false
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}api/dashboard",
+              "host": [
+                "{{baseUrl}}api"
+              ],
+              "path": [
+                "dashboard"
+              ],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2025-08-31",
+                  "description": "Data inicial (YYYY-MM-DD ou YYYY-MM-DD HH:MM:SS). Quando informada, filtra eventos a partir desta data.",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-09-01",
+                  "description": "Data final (YYYY-MM-DD ou YYYY-MM-DD HH:MM:SS). Quando informada, filtra eventos até esta data.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "# GET /api/dashboard\n\nRetorna métricas consolidadas do dashboard com 8 indicadores principais.\n\n## Autenticação\n\nRequer `{{apiKeyHeader}}: {{token}}`.\n\n## Query Parameters (opcionais)\n\n- `startDate` _(YYYY-MM-DD ou YYYY-MM-DD HH:MM:SS)_: data inicial do filtro.\n    \n- `endDate` _(YYYY-MM-DD ou YYYY-MM-DD HH:MM:SS)_: data final do filtro.\n    \n\n> Se `startDate` e `endDate` não forem enviados, retorna métricas globais. \n  \n\n## Métricas Retornadas\n\n### Totais Agregados\n\n- `totalActivePlayers` _(int)_: Quantidade de jogadores com pelo menos um evento\n    \n- `totalScoreAccumulated` _(int)_: Soma total de pontos de todos os eventos\n    \n\n### Rankings (Top 10)\n\n- `topPlayersByXp`: Jogadores com maior XP acumulado\n    \n- `topPlayersByGold`: Jogadores com maior Gold acumulado\n    \n- `topPlayersByKills`: Jogadores com mais abates (kills)\n    \n- `topPlayerDeaths`: Jogadores com mais mortes\n    \n- `topCollectedItems`: Itens mais coletados pelos jogadores\n    \n- `bossesDefeated`: Chefes (bosses) mais derrotados\n    \n\n## Status codes\n\n- `200`: sucesso\n    \n- `400`: parâmetros inválidos\n    \n- `401`: não autenticado\n    \n\n## Exemplos\n\n- `/api/dashboard`\n    \n- `/api/dashboard?startDate=2025-08-31`\n    \n- `/api/dashboard?startDate=2025-08-31&endDate=2025-09-01`"
+          },
+          "response": []
+        }
+      ],
+      "description": "Métricas consolidadas do jogo incluindo totais agregados, rankings de jogadores (XP, Gold, Kills, Mortes), itens mais coletados e chefes derrotados. Ideal para visão geral do estado do jogo."
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Get latest events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}api/events?limit=50&includeRaw=true",
+              "host": [
+                "{{baseUrl}}api"
+              ],
+              "path": [
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Quantidade máxima de eventos. (Mínimo 50 e máximo 500)"
+                },
+                {
+                  "key": "includeRaw",
+                  "value": "true",
+                  "description": "Quando true, inclui a linha original do log (campo raw)."
+                }
+              ]
+            },
+            "description": "# GET /api/events\n\nRetorna os últimos eventos do jogo ordenados por data de ocorrência (mais recentes primeiro).\n\n## Autenticação\n\nRequer `{{apiKeyHeader}}: {{token}}`.\n\n## Query Parameters\n\n- `limit` _(int, padrão 50)_: número máximo de eventos a retornar. (Mínimo 50 e máximo 500)\n    \n- `includeRaw` _(bool, padrão false)_: inclui o texto bruto do log.\n    \n\n## Campos Retornados\n\n- `id` _(string)_: Identificador único do evento\n    \n- `playerId` _(string)_: ID do jogador\n    \n- `actionTypeId` _(int)_: Tipo de ação executada\n    \n- `occurredAt` _(datetime)_: Data/hora de ocorrência\n    \n- `points` _(int?)_: Pontos ganhos\n    \n- `xp`, `gold`: Recursos obtidos\n    \n- `raw` _(string, opcional)_: Linha original do log\n    \n\n## Observações\n\n- `includeRaw=true` aumenta payload; use para auditoria/debug.\n    \n\n## Status codes\n\n- `200`: sucesso\n    \n- `400`: parâmetros inválidos\n    \n- `401`: não autenticado\n    \n\n## Exemplo\n\n- `/api/events?limit=50&includeRaw=true`"
+          },
+          "response": []
+        }
+      ],
+      "description": "Consulta de eventos do jogo ordenados por data de ocorrência. Cada evento representa uma ação registrada nos logs (kills, coleta de itens, conclusão de quests, etc.)."
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "Get top items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}api/items/top?limit=50",
+              "host": [
+                "{{baseUrl}}api"
+              ],
+              "path": [
+                "items",
+                "top"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Quantidade máxima de itens no ranking. (Mínimo 50 e máximo 500)"
+                }
+              ]
+            },
+            "description": "# GET /api/items/top\n\nRetorna os itens mais coletados ordenados por quantidade de coletas.\n\n## Autenticação\n\nRequer `{{apiKeyHeader}}: {{token}}`.\n\n## Query Parameters\n\n- `limit` _(int, padrão 50)_: número máximo de itens a retornar. (Mínimo 50 e máximo 500)\n    \n\n## Campos Retornados\n\n- `itemId` _(int)_: Identificador do item\n    \n- `itemName` _(string)_: Nome do item\n    \n- `timesCollected` _(int)_: Quantidade de vezes que o item foi coletado\n    \n\n## Status codes\n\n- `200`: sucesso\n    \n- `400`: parâmetros inválidos\n    \n- `401`: não autenticado\n    \n\n## Exemplo\n\n- `/api/items/top?limit=50`"
+          },
+          "response": []
+        }
+      ],
+      "description": "Ranking de itens mais coletados pelos jogadores. Útil para análise de popularidade e balanceamento de itens no jogo."
+    },
+    {
+      "name": "Leaderboard",
+      "item": [
+        {
+          "name": "Get leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}api/leaderboard?limit=50",
+              "host": [
+                "{{baseUrl}}api"
+              ],
+              "path": [
+                "leaderboard"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Quantidade máxima de jogadores no ranking. Sugerido: 1..500."
+                }
+              ]
+            },
+            "description": "# GET /api/leaderboard\n\nRetorna o ranking de jogadores ordenado por pontuação total (maior para menor).\n\n## Autenticação\n\nRequer `{{apiKeyHeader}}: {{token}}`.\n\n## Query Parameters\n\n- `limit` _(int, padrão 50)_: número máximo de jogadores. (Mínimo 1 e máximo 500)\n    \n\n## Campos Retornados\n\n- `rank` _(int)_: Posição no ranking\n    \n- `playerId` _(string)_: Identificador do jogador\n    \n- `playerName` _(string)_: Nome do jogador\n    \n- `totalScore` _(_int): Pontuação total acumulada\n    \n\n## Observações\n\n- A pontuação é agregada a partir de todos os eventos do jogador.\n    \n- Jogadores sem pontuação não aparecem no ranking.\n    \n\n## Status codes\n\n- `200`: sucesso\n    \n- `400`: parâmetros inválidos\n    \n- `401`: não autenticado\n    \n\n## Exemplo\n\n- `/api/leaderboard?limit=10`"
+          },
+          "response": []
+        }
+      ],
+      "description": "Ranking geral dos jogadores ordenado por pontuação total acumulada."
+    },
+    {
+      "name": "Players",
+      "item": [
+        {
+          "name": "List players",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}api/players",
+              "host": [
+                "{{baseUrl}}api"
+              ],
+              "path": [
+                "players"
+              ]
+            },
+            "description": "# GET /api/players\n\nRetorna a lista completa de jogadores cadastrados no sistema.\n\n## Autenticação\n\nRequer `{{apiKeyHeader}}: {{token}}`.\n\n## Campos Retornados\n\n- `id` _(string)_: Identificador do jogador\n    \n- `name` _(string)_: Nome do jogador\n    \n- `lastKnownLevel` _(int)_: Último nível conhecido do jogador.\n    \n- `lastKnownZone` _(string)_: Nome da última zona conhecida onde o jogador esteve.\n    \n\n## Observações\n\n- Retorna todos os jogadores que possuem registro na base.\n    \n- Para estatísticas detalhadas, use `/api/players/{id}/stats`.\n    \n\n## Status codes\n\n- `200`: sucesso\n    \n- `401`: não autenticado\n    \n\n## Exemplo\n\n- `/api/players`"
+          },
+          "response": []
+        },
+        {
+          "name": "Get player stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}api/players/:id/stats",
+              "host": [
+                "{{baseUrl}}api"
+              ],
+              "path": [
+                "players",
+                ":id",
+                "stats"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "p1",
+                  "description": "ID do jogador (ex.: p1)."
+                }
+              ]
+            },
+            "description": "# GET /api/players/{id}/stats\n\nRetorna estatísticas detalhadas e agregadas de um jogador específico.\n\n## Autenticação\n\nRequer `{{apiKeyHeader}}: {{token}}`.\n\n## Path Parameters\n\n- `id` _(string)_: identificador do jogador (ex.: `p1`, `p2`).\n    \n\n## Campos Retornados\n\n- `playerId` _(string)_: Identificador do jogador\n    \n- `name` _(string)_: Nome do jogador\n    \n- `totalScore` _(int)_: Pontuação total acumulada\n    \n- `totalDeaths` _(int)_: Total de mortes sofridas\n    \n- `totalKills` _(int)_: Total de abates realizados\n    \n- `itemsCollected` _(int)_: Quantidade de itens coletados\n    \n- `questsCompleted` _(int)_: Quantidade de quests concluídas\n    \n- `totalXp` _(int)_: XP total acumulado\n    \n- `totalGold` _(int)_: Gold total acumulado\n    \n\n## Status codes\n\n- `200`: sucesso\n    \n- `401`: não autenticado\n    \n- `404`: jogador não encontrado\n    \n\n## Exemplo\n\n- `/api/players/p1/stats`"
+          },
+          "response": []
+        }
+      ],
+      "description": "Informações sobre jogadores cadastrados no sistema. Inclui listagem geral e estatísticas detalhadas individuais (pontuação, XP, gold, kills, mortes, itens e quests)."
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "{{apiKeyHeader}}",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{token}}",
+        "type": "string"
+      },
+      {
+        "key": "{{apiKeyHeader}}",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7258/"
+    },
+    {
+      "key": "apiKeyHeader",
+      "value": "X-API-TOKEN"
+    },
+    {
+      "key": "token",
+      "value": "NANDATE-dev-token"
+    }
+  ]
+}
