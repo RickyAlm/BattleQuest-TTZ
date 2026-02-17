@@ -10,6 +10,8 @@ using BattleQuest.Application.Queries.Players;
 using BattleQuest.Infrastructure.Queries.Players;
 using BattleQuest.Application.Queries.Items;
 using BattleQuest.Infrastructure.Queries.Items;
+using BattleQuest.Application.Queries.Leaderboard;
+using BattleQuest.Infrastructure.Queries.Leaderboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +97,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IEventQueries, EfEventQueries>();
 builder.Services.AddScoped<IPlayerQueries, EfPlayerQueries>();
 builder.Services.AddScoped<IItemQueries, EfItemQueries>();
+builder.Services.AddScoped<ILeaderboardQueries, EfLeaderboardQueries>();
 
 var app = builder.Build();
 
