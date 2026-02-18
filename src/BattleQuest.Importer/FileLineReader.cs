@@ -17,10 +17,14 @@ public static class FileLineReader
 	/// <param name="filePath">Caminho completo do arquivo a ser lido</param>
 	/// <param name="ct">Token de cancelamento para interromper a leitura</param>
 	/// <returns>Stream assíncrono de linhas do arquivo</returns>
+	/// <exception cref="FileNotFoundException">Arquivo não encontrado no caminho especificado.</exception>
+	/// <exception cref="UnauthorizedAccessException">Permissão negada ou caminho é um diretório.</exception>
+	/// <exception cref="IOException">Erro de I/O ao acessar o arquivo.</exception>
 	public static async IAsyncEnumerable<string> ReadLinesAsync(
 		string filePath,
 		[EnumeratorCancellation] CancellationToken ct)
 	{
+		ValidateFilePath(filePath);
 		await using var fileStream = OpenFileForReading(filePath);
 		using var reader = new StreamReader(fileStream);
 
@@ -32,6 +36,29 @@ public static class FileLineReader
 				yield break;
 			
 			yield return line;
+		}
+	}
+
+	/// <summary>
+	/// Valida se o caminho do arquivo é válido e acessível.
+	/// </summary>
+	/// <exception cref="ArgumentException">Caminho do arquivo está vazio ou nulo.</exception>
+	/// <exception cref="FileNotFoundException">Arquivo não existe no caminho especificado.</exception>
+	/// <exception cref="UnauthorizedAccessException">Caminho é um diretório ou não há permissão de leitura.</exception>
+	private static void ValidateFilePath(string filePath)
+	{
+		if (string.IsNullOrWhiteSpace(filePath))
+			throw new ArgumentException("O caminho do arquivo não pode ser vazio.", nameof(filePath));
+
+		if (!File.Exists(filePath))
+		{
+			// Verifica se é um diretório
+			if (Directory.Exists(filePath))
+				throw new UnauthorizedAccessException(
+					$"O caminho especificado é um diretório, não um arquivo: '{filePath}'");
+
+			throw new FileNotFoundException(
+				$"Arquivo não encontrado: '{filePath}'", filePath);
 		}
 	}
 
