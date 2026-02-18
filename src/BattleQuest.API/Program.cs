@@ -1,4 +1,5 @@
 using BattleQuest.API.Security;
+using BattleQuest.API.Filters;
 using BattleQuest.Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,10 @@ using BattleQuest.Infrastructure.Queries.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+	options.Filters.Add<DatabaseExceptionFilter>();
+});
 builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 

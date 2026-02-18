@@ -30,10 +30,12 @@ public sealed class ItemsController : ControllerBase
 	/// <response code="200">Itens retornados com sucesso.</response>
 	/// <response code="400">Parâmetro 'limit' inválido (deve estar entre 1 e 500).</response>
 	/// <response code="401">Token de autenticação ausente ou inválido.</response>
+	/// <response code="503">Banco de dados indisponível ou o container do docker está inativo.</response>
 	[HttpGet("top")]
 	[ProducesResponseType(typeof(IReadOnlyList<ItemStatsDto>), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
 	public async Task<ActionResult<IReadOnlyList<ItemStatsDto>>> GetTopCollected(
 		[FromQuery] [Range(1, 500)] int limit = 50,
 		CancellationToken ct = default)

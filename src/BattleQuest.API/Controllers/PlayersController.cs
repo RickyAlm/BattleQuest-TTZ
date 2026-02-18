@@ -26,9 +26,11 @@ public sealed class PlayersController : ControllerBase
 	/// <returns>Lista de jogadores ordenados por identificador.</returns>
 	/// <response code="200">Jogadores retornados com sucesso.</response>
 	/// <response code="401">Token de autenticação ausente ou inválido.</response>
+	/// <response code="503">Banco de dados indisponível ou o container do docker está inativo.</response>
 	[HttpGet]
 	[ProducesResponseType(typeof(IReadOnlyList<PlayerDto>), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
 	public async Task<ActionResult<IReadOnlyList<PlayerDto>>> GetAll(CancellationToken ct = default)
 	{
 		var players = await _queries.GetAllAsync(ct);
@@ -45,10 +47,12 @@ public sealed class PlayersController : ControllerBase
 	/// <response code="200">Estatísticas retornadas com sucesso.</response>
 	/// <response code="401">Token de autenticação ausente ou inválido.</response>
 	/// <response code="404">Jogador não encontrado.</response>
+	/// <response code="503">Banco de dados indisponível ou o container do docker está inativo.</response>
 	[HttpGet("{id}/stats")]
 	[ProducesResponseType(typeof(PlayerStatsDto), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
 	public async Task<ActionResult<PlayerStatsDto>> GetStatsById(
 		[FromRoute] string id,
 		CancellationToken ct = default)
