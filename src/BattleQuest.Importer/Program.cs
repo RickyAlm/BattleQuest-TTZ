@@ -29,6 +29,27 @@ try
 	// Exibição do resultado
 	DisplayResult(result);
 }
+catch (ArgumentException ex) when (ex.Message.Contains("Tipo de arquivo não suportado"))
+{
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine($"\n[ERRO] {ex.Message}");
+	Console.WriteLine("\nApenas arquivos de texto com logs são suportados.");
+	Console.WriteLine("\nExemplos de arquivos NÃO suportados:");
+	Console.WriteLine("  ✗ Imagens: .jpg, .png, .gif, .bmp");
+	Console.WriteLine("  ✗ Documentos: .docx, .pdf, .doc");
+	Console.WriteLine("  ✗ Planilhas: .xlsx, .xls");
+	Console.WriteLine("  ✗ Executáveis: .exe, .dll");
+	Console.ResetColor();
+	Environment.Exit(1);
+}
+catch (InvalidDataException ex)
+{
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine($"\n[ERRO] {ex.Message}");
+	Console.WriteLine("\nO arquivo fornecido não é um arquivo de texto válido.");
+	Console.ResetColor();
+	Environment.Exit(1);
+}
 catch (FileNotFoundException ex)
 {
 	Console.ForegroundColor = ConsoleColor.Red;
