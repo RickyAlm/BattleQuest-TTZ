@@ -21,11 +21,52 @@ if (!TryGetFilePath(args, out var filePath))
 }
 
 // Execução da importação
-var pipeline = host.Services.GetRequiredService<IGameLogImportPipeline>();
-var result = await ExecuteImportAsync(pipeline, filePath);
+try
+{
+	var pipeline = host.Services.GetRequiredService<IGameLogImportPipeline>();
+	var result = await ExecuteImportAsync(pipeline, filePath);
 
-// Exibição do resultado
-DisplayResult(result);
+	// Exibição do resultado
+	DisplayResult(result);
+}
+catch (FileNotFoundException ex)
+{
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine($"\n[ERRO] Arquivo não encontrado: {ex.FileName}");
+	Console.WriteLine("\nVerifique se o caminho está correto e tente novamente.");
+	Console.ResetColor();
+	Environment.Exit(1);
+}
+catch (UnauthorizedAccessException ex)
+{
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine($"\n[ERRO] Acesso negado: {ex.Message}");
+	Console.WriteLine("\nPossíveis causas:");
+	Console.WriteLine("  - O caminho aponta para um diretório ao invés de um arquivo");
+	Console.WriteLine("  - Você não tem permissão de leitura no arquivo");
+	Console.WriteLine("  - O arquivo está sendo usado por outro processo");
+	Console.ResetColor();
+	Environment.Exit(1);
+}
+catch (IOException ex)
+{
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine($"\n[ERRO] Erro ao acessar o arquivo: {ex.Message}");
+	Console.WriteLine("\nVerifique se o arquivo não está corrompido ou sendo usado por outro programa.");
+	Console.ResetColor();
+	Environment.Exit(1);
+}
+catch (Exception ex)
+{
+	Console.ForegroundColor = ConsoleColor.Red;
+	Console.WriteLine($"\n[ERRO] Erro inesperado: {ex.Message}");
+	Console.WriteLine($"\nTipo: {ex.GetType().Name}");
+	#if DEBUG
+	Console.WriteLine($"\nStack Trace:\n{ex.StackTrace}");
+	#endif
+	Console.ResetColor();
+	Environment.Exit(1);
+}
 
 return;
 
@@ -103,7 +144,19 @@ static async Task<ImportResult> ExecuteImportAsync(IGameLogImportPipeline pipeli
 /// </summary>
 static void DisplayUsage()
 {
-	Console.WriteLine("Uso: dotnet run --project src/BattleQuest.Importer -- <caminho-do-log>");
+	Console.WriteLine("=== BattleQuest Log Importer ===");
+	Console.WriteLine();
+	Console.WriteLine("Uso:");
+	Console.WriteLine("  dotnet run --project src/BattleQuest.Importer -- <caminho-do-arquivo-log>");
+	Console.WriteLine();
+	Console.WriteLine("Exemplos:");
+	Console.WriteLine("  dotnet run --project src/BattleQuest.Importer -- Data/game_log_large.txt");
+	Console.WriteLine("  dotnet run --project src/BattleQuest.Importer -- \"C:\\logs\\game_log.txt\"");
+	Console.WriteLine();
+	Console.WriteLine("Observações:");
+	Console.WriteLine("  - O caminho deve apontar para um ARQUIVO, não um diretório");
+	Console.WriteLine("  - Use aspas se o caminho contiver espaços");
+	Console.WriteLine("  - Certifique-se de ter permissão de leitura no arquivo");
 }
 
 /// <summary>
