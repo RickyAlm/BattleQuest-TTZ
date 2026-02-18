@@ -31,10 +31,12 @@ public sealed class DashboardController : ControllerBase
 	/// <response code="200">Dashboard retornado com sucesso.</response>
 	/// <response code="400">Parâmetros de data inválidos ou formato incorreto.</response>
 	/// <response code="401">Token de autenticação ausente ou inválido.</response>
+	/// <response code="503">Banco de dados indisponível ou o container do docker está inativo.</response>
 	[HttpGet]
 	[ProducesResponseType(typeof(DashboardMetricsDto), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
 	public async Task<ActionResult<DashboardMetricsDto>> GetMetrics(
 		[FromQuery] DateTime? startDate = null,
 		[FromQuery] DateTime? endDate = null,
