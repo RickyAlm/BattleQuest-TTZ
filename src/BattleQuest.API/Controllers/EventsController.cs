@@ -12,6 +12,8 @@ namespace BattleQuest.API.Controllers;
 [ApiController]
 [Route("api/events")]
 [Authorize]
+[Produces("application/json")]
+[Tags("Events")]
 public sealed class EventsController : ControllerBase
 {
 	private readonly IEventQueries _queries;
@@ -26,9 +28,11 @@ public sealed class EventsController : ControllerBase
 	/// <param name="ct">Token de cancelamento.</param>
 	/// <returns>Lista de eventos com informações detalhadas.</returns>
 	/// <response code="200">Eventos retornados com sucesso.</response>
+	/// <response code="400">Parâmetro 'limit' inválido (deve estar entre 1 e 500).</response>
 	/// <response code="401">Token de autenticação ausente ou inválido.</response>
 	[HttpGet]
 	[ProducesResponseType(typeof(IReadOnlyList<EventDto>), StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	public async Task<ActionResult<IReadOnlyList<EventDto>>> GetLatest(
 		[FromQuery] [Range(1, 500)] int limit = 50,

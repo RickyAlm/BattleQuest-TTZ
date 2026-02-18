@@ -5,9 +5,12 @@ namespace BattleQuest.API.Controllers;
 
 /// <summary>
 /// Controller para verificação de saúde da API.
+/// Endpoint público (sem autenticação) para monitoramento de disponibilidade.
 /// </summary>
 [ApiController]
 [Route("api/health")]
+[Produces("application/json")]
+[Tags("Health")]
 public class HealthController : ControllerBase
 {
 	/// <summary>

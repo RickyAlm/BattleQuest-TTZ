@@ -11,6 +11,8 @@ namespace BattleQuest.API.Controllers;
 [ApiController]
 [Route("api/players")]
 [Authorize]
+[Produces("application/json")]
+[Tags("Players")]
 public sealed class PlayersController : ControllerBase
 {
 	private readonly IPlayerQueries _queries;

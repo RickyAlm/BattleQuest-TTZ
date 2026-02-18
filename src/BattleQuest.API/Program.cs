@@ -27,7 +27,24 @@ builder.Services.AddSwaggerGen(c =>
 	{
 		Title = "BattleQuest API",
 		Version = "v1",
-		Description = "API para consulta de estatísticas e eventos do jogo BattleQuest"
+		Description = "API RESTful read-only para consulta de estatísticas e eventos processados dos logs do jogo BattleQuest.\n\n" +
+		              "**Funcionalidades:**\n" +
+		              "- Consulta de jogadores e estatísticas individuais\n" +
+		              "- Ranking geral (leaderboard) por pontuação\n" +
+		              "- Histórico de eventos do jogo\n" +
+		              "- Análise de itens mais coletados\n" +
+		              "- Dashboard com métricas consolidadas (XP, Gold, Kills, Bosses)\n\n" +
+		              "**Arquitetura:** Clean Architecture com ASP.NET Core 8.0, Entity Framework Core e PostgreSQL.",
+		Contact = new OpenApiContact
+		{
+			Name = "Henrique Almeida (Desenvolvedor)",
+			Email = "rick.vieira.almeida@gmail.com"
+		},
+		License = new OpenApiLicense
+		{
+			Name = "MIT License",
+			Url = new Uri("https://opensource.org/licenses/MIT")
+		}
 	});
 
 	// Incluir documentação XML
