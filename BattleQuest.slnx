@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BattleQuest.API/BattleQuest.API.csproj" />
+    <Project Path="src/BattleQuest.Application/BattleQuest.Application.csproj" />
+    <Project Path="src/BattleQuest.Domain/BattleQuest.Domain.csproj" />
+    <Project Path="src/BattleQuest.Importer/BattleQuest.Importer.csproj" />
+    <Project Path="src/BattleQuest.Infrastructure/BattleQuest.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BattleQuest.API.Tests/BattleQuest.API.Tests.csproj" />
+    <Project Path="tests/BattleQuest.Application.Tests/BattleQuest.Application.Tests.csproj" />
+    <Project Path="tests/BattleQuest.Integration.Tests/BattleQuest.Integration.Tests.csproj" />
+  </Folder>
+</Solution>
