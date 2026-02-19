@@ -58,7 +58,7 @@ public sealed class GameLogImportPipeline : IGameLogImportPipeline
 		if (context.Batch.Count > 0)
 			await FlushBatchAsync(context, ct);
 
-		return new ImportResult(context.LinesRead, context.EventsInserted, context.DuplicatesSkipped);
+		return new ImportResult(context.LinesRead, context.EventsInserted, context.DuplicatesSkipped, TimeSpan.Zero);
 	}
 
 	/// <summary>
